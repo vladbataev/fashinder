@@ -27,8 +27,7 @@ def _compute_ratio(image, season, max_distance,
     with open("/home/ubuntu/fashinder/style_type/colors.json", "r") as fjs:
         result = json.load(fjs)
     #im = image.convert('RGB')
-    width = im.width
-    height = im.height
+    width, height = im.shape[:2]
     all_count = 0.
     bad_count = 0.
     for idx in range(width):
