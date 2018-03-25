@@ -71,7 +71,7 @@ def segment(image, nclasses=150, port=8080, host="localhost"):
     rgb[:,:,0] = r/255.0
     rgb[:,:,1] = g/255.0
     rgb[:,:,2] = b/255.0
-    print(rgb[600, 400])
+    print(rgb[0, 0])
     body_mask = np.where(rgb* 255 == np.array([47, 197, 233]), 1, 0)
     
     result = body_mask * raw_img
