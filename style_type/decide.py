@@ -24,16 +24,16 @@ def _min_distance(target, point_list, default_win=0):
 
 def _compute_ratio(image, season, max_distance,
         max_white_distance, miss_color):
-    with open("colors.json", "r") as fjs:
+    with open("/home/ubuntu/fashinder/style_type/colors.json", "r") as fjs:
         result = json.load(fjs)
-    im = image.convert('RGB')
+    #im = image.convert('RGB')
     width = im.width
     height = im.height
     all_count = 0.
     bad_count = 0.
     for idx in range(width):
         for jdx in range(height):
-            pixel = im.getpixel((idx,jdx))
+            pixel = im[idx, jdx]
             if _two_dist(pixel, miss_color) < max_white_distance:
                 continue
             all_count += 1
