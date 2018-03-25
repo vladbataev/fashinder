@@ -6,12 +6,14 @@ import glob
 
 import uuid
 
+
 import gevent as g
 from gevent.queue import Queue
 from gevent.wsgi import WSGIServer
 from gevent import monkey; monkey.patch_all()
 from colors.segment import segment
 from style_type.decide import check_on_best
+from matplotlib import pyplot as plt
 import pickle
 
 UPLOAD_FOLDER = '/home/ubuntu/model/'
@@ -56,17 +58,17 @@ def check_season():
     list_of_files = glob.glob(RESULTS_FOLDER + '*')  # * means all if need specific format then *.csv
     latest_file = max(list_of_files, key=os.path.getctime)
     if request.method == 'GET':
-        with open(latest_file, "rb") as fin:
-            img = pickle.load(fin)
-            answer = check_on_best(img, request.json["season"])
-            return jsonify({"seems good": answer})
+        img = plt.imread(latest_file).astype("uint8")
+        img = img[:, :, :3]
+        print(img)
+        answer = check_on_best(img, request.json["season"])
+        return jsonify({"seems good": answer})
 
 
 def background_worker():
     for filename in job_queue:
         result = segment(filename)
-        with open(os.path.join(RESULTS_FOLDER, filename), "wb") as fout:
-            pickle.dump(result, fout)
+        plt.imsave(os.path.join(RESULTS_FOLDER, filename), result)
 
 
 if __name__ == "__main__":
