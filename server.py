@@ -61,7 +61,7 @@ def check_season():
         img = plt.imread(latest_file).astype("uint8")
         img = img[:, :, :3]
         print(img)
-        answer = check_on_best(img, request.json["season"])
+        answer = check_on_best(img, request.json["season"], miss_color=(0, 0, 0))
         return jsonify({"seems good": answer})
 
 

@@ -5,10 +5,9 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import random
 
-random.seed(134124)
-
 
 def segment(image, nclasses=150, port=8080, host="localhost"):
+    random.seed(134124)
     model_dir = '/home/model'
     sname = 'segserv'
     description = 'image segmentation'
