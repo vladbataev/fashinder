@@ -8,25 +8,13 @@ import random
 random.seed(134124)
 
 
-def segment():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--image",help="image name")
-    parser.add_argument("--nclasses",help="number of classes",type=int,default=150)
-    parser.add_argument("--width",help="image width",type=int,default=480)
-    parser.add_argument("--height",help="image height",type=int,default=480)
-    parser.add_argument("--port", type=int, default=8888)
-    parser.add_argument("--host", type=str)
-    args = parser.parse_args()
-
+def segment(image, nclasses=150, port=8080, host="localhost"):
     model_dir = '/home/model'
     sname = 'segserv'
     description = 'image segmentation'
     mllib = 'caffe'
     mltype = 'unsupervised'
-    nclasses = args.nclasses
-    width = args.width
-    height = args.height
-    dd = DD(args.host, args.port)
+    dd = DD(host, port)
     dd.set_return_format(dd.RETURN_PYTHON)
 
     def random_color():
@@ -34,6 +22,10 @@ def segment():
         r, g, b = [random.randint(0,255) for i in range(3)]
         return [r, g, b]
 
+    raw_img = plt.imread("/home/ubuntu/model/" + image).astype("float32") / 255
+    width, height = raw_img.shape[:2]
+    #width = 480
+    #height = 480
     # creating ML service
     model_repo = model_dir
     if not model_repo:
@@ -52,7 +44,7 @@ def segment():
     parameters_input = {'segmentation':True}
     parameters_mllib = {'gpu':True,'gpuid':0}
     parameters_output = {}
-    data = ["/home/model/" + args.image]
+    data = ["/home/model/" + image]
     detect = dd.post_predict(sname,data,parameters_input,parameters_mllib,parameters_output)
     
     pixels = np.array((map(int,detect['body']['predictions'][0]['vals'])))
@@ -82,11 +74,11 @@ def segment():
     print(rgb[600, 400])
     body_mask = np.where(rgb* 255 == np.array([47, 197, 233]), 1, 0)
     
-    raw_img = plt.imread("/home/ubuntu/model/" + args.image).astype("float32") / 255
     result = body_mask * raw_img
     plt.imsave("result.png", result)
     return result
 
 
 if __name__ == "__main__":
-    segment()
+    img = sys.argv[1]
+    segment(img)
