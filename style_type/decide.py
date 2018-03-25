@@ -1,5 +1,5 @@
 import json
-import Image
+from matplotlib import pyplot as plt
 
 from numba import jit
 
@@ -71,7 +71,7 @@ def check_on_best(image, check_season, max_distance=30,
 
 
 if __name__ == "__main__":
-    im = Image.open("season_autumn.jpeg")
+    im = plt.imread("season_autumn.jpeg")
 
     print(check_on_best(im, "autumn"))
 
